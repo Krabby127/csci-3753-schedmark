@@ -14,5 +14,10 @@ void primes(size_t num, unsigned int prime_nums[]);
 // same as primes but prints each one to the terminal
 void primes_verbose(size_t num, unsigned int prime_nums[]);
 
+// same as primes but writes output to a file, while avoiding caching
+// NOTE: The only point of this function is for mixed IO benchmarking
+int primes_file(size_t num, const char *filename);
+
+
 
 #endif
