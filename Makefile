@@ -1,6 +1,6 @@
 CFLAGS=-Wall -Wextra -std=gnu99
 CC=gcc
-BINS=prime
+BINS=prime schedule
 
 
 
@@ -10,6 +10,9 @@ BINS=prime
 all: $(BINS)
 
 prime: prime.c primes.o
+	$(CC) $(CFLAGS) -o $@ $^
+
+schedule: schedule.c
 	$(CC) $(CFLAGS) -o $@ $^
 
 %.o: %.c %.h debug.h
