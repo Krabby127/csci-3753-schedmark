@@ -15,7 +15,8 @@
 
 // algorithm taken from:
 //      http://docs.cython.org/src/tutorial/cython_tutorial.html
-void _primes(size_t num, unsigned int prime_nums[], bool verbose){
+void _primes(size_t num, unsigned int prime_nums[], bool verbose)
+{
 
     unsigned int n = 2;
     size_t k = 0;
@@ -54,7 +55,8 @@ void _primes(size_t num, unsigned int prime_nums[], bool verbose){
 
 // computes the first num primes and returns them in the prime_nums array
 // NOTE: This function can take a long time to complete the calculation
-void primes(size_t num, unsigned int prime_nums[]){
+void primes(size_t num, unsigned int prime_nums[])
+{
     return _primes(num, prime_nums, false);
 }
 
@@ -62,14 +64,16 @@ void primes(size_t num, unsigned int prime_nums[]){
 
 
 // same as primes but prints each one to the terminal
-void primes_verbose(size_t num, unsigned int prime_nums[]){
+void primes_verbose(size_t num, unsigned int prime_nums[])
+{
     return _primes(num, prime_nums, true);
 }
 
 
 // same as primes but writes output to a file, while avoiding caching
 // NOTE: The only point of this function is for mixed IO benchmarking
-int primes_file(size_t num, const char *filename){
+int primes_file(size_t num, const char *filename)
+{
 
     // error code
     int err = 0;
