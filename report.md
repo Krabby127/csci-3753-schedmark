@@ -31,10 +31,110 @@ IO bound code from the lab handout (INSERT REFERENCE).
 Methods
 =======
 
+Process Types
+-------------
+
+In order to examine the Linux schedulers with processes that have heavy CPU
+usage a prime computation library (`primes.c`) and program (`prime.c`) were
+developed.  It was based on the algorithm found on the [Cython
+Tutorial](http://docs.cython.org/src/tutorial/cython_tutorial.html) which is
+essentially a search through every integer after 2 checking to see if it is
+divisible by the previous primes.
+
+To test the schedulers behavior with a heavy load of IO the `rw` program (which
+came with the assignment handout (INSERT REFERENCE)) was used.  This program
+copies blocks from one file to make a new file.  In particular, it does this
+synchronously, avoiding system buffers that may interfere with the results of
+the testing.  It is also capable of generating a unique filename based on its
+PID (process id) which became useful in the benchmarking process.  It is
+important to note that the default blocksize is 1024 bytes and the total amount
+of data transfered is 100 blocks by default.
+
+The final mode of usage tested was a mix between IO and CPU heavy processes.  To
+accomplish this the `primes` library and `prime` program were modified to allow
+writing the output to a file, 512 bytes at a time, using the same synchronous IO
+used by `rw`.  Initially this was done in 4 byte (one prime) increments but was
+changed due to being excessively IO driven.
 
 
+Scheduling
+----------
+
+The above processes covered the three types of processes that needed to be
+analyzed, however, these needed to be run under different schedulers and system
+loads.  To accomplish this the `schedule.c` program was written.  This program
+does two things.  It first sets the scheduler to either the CFS scheduler, the
+soft realtime RR scheduler, or the soft realtime FCFS scheduler (known internaly
+to Linux as FIFO).  The second role it performs is to fork off a given number of
+processes (which inherit the selected scheduler) and runs the program given to
+`schedule` in each process.  This is done through `fork`, `exec`, and `wait`.
+`schedule` can also optionally pass the PID of the child as an argument to the
+command it execs.
+
+The specifics of the settings used to call `prime` and `schedule` was to
+generate the first 10,000 primes and to use 10, 100, or 1000 processes depending
+on whether the benchmark was to test a light, medium, or heavy system load.
+Therefore, it was only necessary to run each possible combination of load,
+process, and scheduler, 27 in all.  This was done with the `benchmark` Bourne
+shell script.
 
 
+Benchmarking
+------------
+
+The `benchmark` script calls each of the aforementioned combinations and
+measures the times, CPU usage, and context switches with the `time` program
+located at `/usr/bin/time`.  It directs the output of the `time` program to
+individual files (found in Appendix A under "Raw Data").  `benchmark` takes an
+optional argument that is the number of times to run the benchmarks, subsequent
+runs of these benchmarks are appended to, rather than overwriting these files.
+In the case of this report 20 rounds of benchmarking where used.
+
+This however, gives multiple benchmark rounds and does not report the wait time.
+To deal with the first another shell script `analyze` is used which makes heavy
+use of `awk` to compute the average values place them into files specific to the
+scheduler and measurement such as `cfs-time.dat`, `rr-percent.dat`, and
+`fcfs-context_switch.dat`.  `analyze` also fixes the second problem by computing
+the wait time (time not spent on the process or systems calls relating to the
+process).  The formula for wall time (real time) is:
+$$\text{wall time} = \frac{\text{user time} + \text{system time} 
+                   + \text{wait time}}{\text{processor cores}}$$
+which when solved for _wait time_ gives:
+$$\text{wait time} = \text{wall time} \cdot \text{processor cores} 
+                   - \text{user time} + \text{system time}$$
+This script gives the files located in the "Graph Data" section of Appendix A.
+
+The final part of the analysis is generating the plots shown in the next
+section.  This is done with the `plot` shell script which makes heavy use of
+`gnuplot`.
+
+
+Testing Setup
+-------------
+
+The computer used for benchmarking has the setup shown in Table 1.
+
+Table: Testing computer setup.
+
+| Varaible    | Value                      |
+| ----------- | -------------------------- |
+| OS          | Arch Linux                 |
+| Kernel      | 3.19.2                     |
+| Archtecture | i686                       |
+| CPU         | Intel Core 2 T7400         |
+| CPU Clock   | 2.16 GHz                   |
+| CPU Cores   | 2 (no Hyper-Threading)     |
+| Memory      | 2 GB                       |
+| HDD         | Seagate Barracuda 7200 RPM |
+| Filesystem  | BTRFS                      |
+
+
+The reasoning behind using this old machine was that bare metal could be used
+without worrying about a mistake in the code that could destroy data or the OS
+itself due to running as root, as this machines installation and data were
+disposable.
+
+In addition, to isolate the testing from outside interference no GUI was used.
 
 
 
