@@ -107,6 +107,7 @@ int primes_file(size_t num, const char *filename)
     unsigned int n = 2;
     size_t k = 0;
     size_t i = 0;
+    size_t w = 0;
 
     for (k = 0, n = 2; k < num; ++n){
 
@@ -118,10 +119,18 @@ int primes_file(size_t num, const char *filename)
             prime_nums[k] = n;
             ++k;
 
-            // write prime to file
-            write(fid, &n, sizeof(unsigned int));
+        }
+
+        // write to file every 128 primes to file
+        if (k - w ==128){
+            write(fid, &(prime_nums[w]), 128*sizeof(unsigned int));
+            w += 128;
         }
     }
+
+    // finish writing primes to file
+    write(fid, &(prime_nums[w]), (k - w)*sizeof(unsigned int));
+
 
 fail:
 
