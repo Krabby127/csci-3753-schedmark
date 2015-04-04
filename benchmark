@@ -1,0 +1,280 @@
+#!/bin/sh
+
+
+# Program to run benchmarks.
+#
+# Copyright (C) 2015  Michael R. Shannon
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+
+
+
+TIME="/usr/bin/time"
+TIME_FORMAT="%e\t %U\t %S\t %P\t %c\t %w"
+LIGHT_USAGE=10
+MEDIUM_USAGE=100
+HEAVY_USAGE=1000
+PRIMES=10000
+USER=$(whoami)
+
+
+
+benchmark()
+{
+
+    # check number of inputs
+    if [ "$#" -gt "1" ]; then
+        echo "$0 expects no more than 1 argument" >&2
+        return 1
+    fi
+
+    # set number of times to run benchmark
+    if [ $# -eq 1 ]; then
+        TIMES=$1
+    else
+        TIMES=1
+    fi
+
+    # store the current directory
+    CODE_DIR=$PWD;
+
+    # make temporary directory for output files
+    TMP_DIR=$PWD/tmp
+    if [ ! -d "$TMP_DIR" ]; then
+        mkdir "$TMP_DIR"
+    fi
+
+    # make results directory
+    if [ ! -d "$CODE_DIR/results/raw" ]; then
+        mkdir -p "$CODE_DIR/results/raw"
+    fi
+
+    cd "$TMP_DIR"
+
+    # make IO file
+    dd bs=4096 count=512 if=/dev/urandom of="$TMP_DIR/rwinput"
+
+    # run benchmarks
+    for N in $(seq 1 $TIMES); do
+        echo ""
+        echo ""
+        echo "Benchmark run $N of $TIMES"
+        echo "-------------------------------------------------"
+        echo ""
+        run_cfsmark "$CODE_DIR"
+        run_fcfsmark "$CODE_DIR"
+        run_rrmark "$CODE_DIR"
+    done
+
+    return 0
+}
+
+
+
+
+run_cfsmark()
+{
+    CODE_DIR="$1"
+
+    # run cpu with low usage size
+    echo "Benchmarking CFS scheduler with light usage of CPU bound processes."
+    "$TIME" -ao "$CODE_DIR/results/raw/cfs-cpu-light.dat" -f "$TIME_FORMAT" \
+        "$CODE_DIR/schedule" -n $LIGHT_USAGE -s 0 \
+        "$CODE_DIR/prime" $PRIMES >/dev/null
+
+    # run cpu with medium usage size
+    echo "Benchmarking CFS scheduler with medium usage of CPU bound processes."
+    "$TIME" -ao "$CODE_DIR/results/raw/cfs-cpu-medium.dat" -f "$TIME_FORMAT" \
+        "$CODE_DIR/schedule" -n $MEDIUM_USAGE -s 0 \
+        "$CODE_DIR/prime" $PRIMES >/dev/null
+
+    # run cpu with heavy usage size
+    echo "Benchmarking CFS scheduler with heavy usage of CPU bound processes."
+    "$TIME" -ao "$CODE_DIR/results/raw/cfs-cpu-heavy.dat" -f "$TIME_FORMAT" \
+        "$CODE_DIR/schedule" -n $HEAVY_USAGE -s 0 \
+        "$CODE_DIR/prime" $PRIMES >/dev/null
+
+    # run mixed with low usage size
+    echo "Benchmarking CFS scheduler with light usage of mixed processes."
+    "$TIME" -ao "$CODE_DIR/results/raw/cfs-mixed-light.dat" -f "$TIME_FORMAT" \
+        "$CODE_DIR/schedule" -a -n $LIGHT_USAGE -s 0 \
+        "$CODE_DIR/prime" $PRIMES >/dev/null
+
+    # run mixed with medium usage size
+    echo "Benchmarking CFS scheduler with medium usage of mixed processes."
+    "$TIME" -ao "$CODE_DIR/results/raw/cfs-mixed-medium.dat" -f "$TIME_FORMAT" \
+        "$CODE_DIR/schedule" -a -n $MEDIUM_USAGE -s 0 \
+        "$CODE_DIR/prime" $PRIMES >/dev/null
+
+    # run mixed with heavy usage size
+    echo "Benchmarking CFS scheduler with heavy usage of mixed processes."
+    "$TIME" -ao "$CODE_DIR/results/raw/cfs-mixed-heavy.dat" -f "$TIME_FORMAT" \
+        "$CODE_DIR/schedule" -a -n $HEAVY_USAGE -s 0 \
+        "$CODE_DIR/prime" $PRIMES >/dev/null
+
+    # run io with low usage size
+    echo "Benchmarking CFS scheduler with light usage of IO bound processes."
+    "$TIME" -ao "$CODE_DIR/results/raw/cfs-io-light.dat" -f "$TIME_FORMAT" \
+        "$CODE_DIR/schedule" -n $LIGHT_USAGE -s 0 \
+        "$CODE_DIR/rw" >/dev/null
+
+    # run io with medium usage size
+    echo "Benchmarking CFS scheduler with medium usage of IO bound processes."
+    "$TIME" -ao "$CODE_DIR/results/raw/cfs-io-medium.dat" -f "$TIME_FORMAT" \
+        "$CODE_DIR/schedule" -n $MEDIUM_USAGE -s 0 \
+        "$CODE_DIR/rw" >/dev/null
+
+    # run io with heavy usage size
+    echo "Benchmarking CFS scheduler with heavy usage of IO bound processes."
+    "$TIME" -ao "$CODE_DIR/results/raw/cfs-io-heavy.dat" -f "$TIME_FORMAT" \
+        "$CODE_DIR/schedule" -n $HEAVY_USAGE -s 0 \
+        "$CODE_DIR/rw" >/dev/null
+
+    return 0
+}
+
+
+
+
+run_fcfsmark()
+{
+    CODE_DIR="$1"
+
+    # run cpu with low usage size
+    echo "Benchmarking FCFS scheduler with light usage of CPU bound processes."
+    "$TIME" -ao "$CODE_DIR/results/raw/fcfs-cpu-light.dat" -f "$TIME_FORMAT" \
+        sudo "$CODE_DIR/schedule" -u "$USER" -n $LIGHT_USAGE -s 1 \
+        "$CODE_DIR/prime" $PRIMES >/dev/null
+
+    # run cpu with medium usage size
+    echo "Benchmarking FCFS scheduler with medium usage of CPU bound processes."
+    "$TIME" -ao "$CODE_DIR/results/raw/fcfs-cpu-medium.dat" -f "$TIME_FORMAT" \
+        sudo "$CODE_DIR/schedule" -u "$USER" -n $MEDIUM_USAGE -s 1 \
+        "$CODE_DIR/prime" $PRIMES >/dev/null
+
+    # run cpu with heavy usage size
+    echo "Benchmarking FCFS scheduler with heavy usage of CPU bound processes."
+    "$TIME" -ao "$CODE_DIR/results/raw/fcfs-cpu-heavy.dat" -f "$TIME_FORMAT" \
+        sudo "$CODE_DIR/schedule" -u "$USER" -n $HEAVY_USAGE -s 1 \
+        "$CODE_DIR/prime" $PRIMES >/dev/null
+
+    # run mixed with low usage size
+    echo "Benchmarking FCFS scheduler with light usage of mixed processes."
+    "$TIME" -ao "$CODE_DIR/results/raw/fcfs-mixed-light.dat" -f "$TIME_FORMAT" \
+        sudo "$CODE_DIR/schedule" -a -u "$USER" -n $LIGHT_USAGE -s 1 \
+        "$CODE_DIR/prime" $PRIMES >/dev/null
+
+    # run mixed with medium usage size
+    echo "Benchmarking FCFS scheduler with medium usage of mixed processes."
+    "$TIME" -ao "$CODE_DIR/results/raw/fcfs-mixed-medium.dat" -f "$TIME_FORMAT" \
+        sudo "$CODE_DIR/schedule" -a -u "$USER" -n $MEDIUM_USAGE -s 1 \
+        "$CODE_DIR/prime" $PRIMES >/dev/null
+
+    # run mixed with heavy usage size
+    echo "Benchmarking FCFS scheduler with heavy usage of mixed processes."
+    "$TIME" -ao "$CODE_DIR/results/raw/fcfs-mixed-heavy.dat" -f "$TIME_FORMAT" \
+        sudo "$CODE_DIR/schedule" -a -u "$USER" -n $HEAVY_USAGE -s 1 \
+        "$CODE_DIR/prime" $PRIMES >/dev/null
+
+    # run io with low usage size
+    echo "Benchmarking FCFS scheduler with light usage of IO bound processes."
+    "$TIME" -ao "$CODE_DIR/results/raw/fcfs-io-light.dat" -f "$TIME_FORMAT" \
+        sudo "$CODE_DIR/schedule" -u "$USER" -n $LIGHT_USAGE -s 1 \
+        "$CODE_DIR/rw" >/dev/null
+
+    # run io with medium usage size
+    echo "Benchmarking FCFS scheduler with medium usage of IO bound processes."
+    "$TIME" -ao "$CODE_DIR/results/raw/fcfs-io-medium.dat" -f "$TIME_FORMAT" \
+        sudo "$CODE_DIR/schedule" -u "$USER" -n $MEDIUM_USAGE -s 1 \
+        "$CODE_DIR/rw" >/dev/null
+
+    # run io with heavy usage size
+    echo "Benchmarking FCFS scheduler with heavy usage of IO bound processes."
+    "$TIME" -ao "$CODE_DIR/results/raw/fcfs-io-heavy.dat" -f "$TIME_FORMAT" \
+        sudo "$CODE_DIR/schedule" -u "$USER" -n $HEAVY_USAGE -s 1 \
+        "$CODE_DIR/rw" >/dev/null
+
+    return 0
+}
+
+
+
+
+run_rrmark()
+{
+    CODE_DIR="$1"
+
+    # run cpu with low usage size
+    echo "Benchmarking RR scheduler with light usage of CPU bound processes."
+    "$TIME" -ao "$CODE_DIR/results/raw/rr-cpu-light.dat" -f "$TIME_FORMAT" \
+        sudo "$CODE_DIR/schedule" -u "$USER" -n $LIGHT_USAGE -s 2 \
+        "$CODE_DIR/prime" $PRIMES >/dev/null
+
+    # run cpu with medium usage size
+    echo "Benchmarking RR scheduler with medium usage of CPU bound processes."
+    "$TIME" -ao "$CODE_DIR/results/raw/rr-cpu-medium.dat" -f "$TIME_FORMAT" \
+        sudo "$CODE_DIR/schedule" -u "$USER" -n $MEDIUM_USAGE -s 2 \
+        "$CODE_DIR/prime" $PRIMES >/dev/null
+
+    # run cpu with heavy usage size
+    echo "Benchmarking RR scheduler with heavy usage of CPU bound processes."
+    "$TIME" -ao "$CODE_DIR/results/raw/rr-cpu-heavy.dat" -f "$TIME_FORMAT" \
+        sudo "$CODE_DIR/schedule" -u "$USER" -n $HEAVY_USAGE -s 2 \
+        "$CODE_DIR/prime" $PRIMES >/dev/null
+
+    # run mixed with low usage size
+    echo "Benchmarking RR scheduler with light usage of mixed processes."
+    "$TIME" -ao "$CODE_DIR/results/raw/rr-mixed-light.dat" -f "$TIME_FORMAT" \
+        sudo "$CODE_DIR/schedule" -a -u "$USER" -n $LIGHT_USAGE -s 2 \
+        "$CODE_DIR/prime" $PRIMES >/dev/null
+
+    # run mixed with medium usage size
+    echo "Benchmarking RR scheduler with medium usage of mixed processes."
+    "$TIME" -ao "$CODE_DIR/results/raw/rr-mixed-medium.dat" -f "$TIME_FORMAT" \
+        sudo "$CODE_DIR/schedule" -a -u "$USER" -n $MEDIUM_USAGE -s 2 \
+        "$CODE_DIR/prime" $PRIMES >/dev/null
+
+    # run mixed with heavy usage size
+    echo "Benchmarking RR scheduler with heavy usage of mixed processes."
+    "$TIME" -ao "$CODE_DIR/results/raw/rr-mixed-heavy.dat" -f "$TIME_FORMAT" \
+        sudo "$CODE_DIR/schedule" -a -u "$USER" -n $HEAVY_USAGE -s 2 \
+        "$CODE_DIR/prime" $PRIMES >/dev/null
+
+    # run io with low usage size
+    echo "Benchmarking RR scheduler with light usage of IO bound processes."
+    "$TIME" -ao "$CODE_DIR/results/raw/rr-io-light.dat" -f "$TIME_FORMAT" \
+        sudo "$CODE_DIR/schedule" -u "$USER" -n $LIGHT_USAGE -s 2 \
+        "$CODE_DIR/rw" >/dev/null
+
+    # run io with medium usage size
+    echo "Benchmarking RR scheduler with medium usage of IO bound processes."
+    "$TIME" -ao "$CODE_DIR/results/raw/rr-io-medium.dat" -f "$TIME_FORMAT" \
+        sudo "$CODE_DIR/schedule" -u "$USER" -n $MEDIUM_USAGE -s 2 \
+        "$CODE_DIR/rw" >/dev/null
+
+    # run io with heavy usage size
+    echo "Benchmarking RR scheduler with heavy usage of IO bound processes."
+    "$TIME" -ao "$CODE_DIR/results/raw/rr-io-heavy.dat" -f "$TIME_FORMAT" \
+        sudo "$CODE_DIR/schedule" -u "$USER" -n $HEAVY_USAGE -s 2 \
+        "$CODE_DIR/rw" >/dev/null
+
+    return 0
+}
+
+
+
+
+benchmark $@

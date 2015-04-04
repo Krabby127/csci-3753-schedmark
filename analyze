@@ -1,0 +1,346 @@
+#!/bin/sh
+
+
+# Program to analyze raw benchmark data.
+#
+# Copyright (C) 2015  Michael R. Shannon
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+
+
+
+analyze()
+{
+    cfs_time_results > "./results/cfs-time.dat"
+    fcfs_time_results > "./results/fcfs-time.dat"
+    rr_time_results > "./results/rr-time.dat"
+
+    cfs_percent_results > "./results/cfs-percent.dat"
+    fcfs_percent_results > "./results/fcfs-percent.dat"
+    rr_percent_results > "./results/rr-percent.dat"
+
+    cfs_context_switch_results > "./results/cfs-context_switch.dat"
+    fcfs_context_switch_results > "./results/fcfs-context_switch.dat"
+    rr_context_switch_results > "./results/rr-context_switch.dat"
+}
+
+
+
+
+cfs_context_switch_results()
+{
+    context_switch_line "./results/raw/cfs-cpu-light.dat" \
+                        "CPU bound light usage CFS."
+    context_switch_line "./results/raw/cfs-cpu-medium.dat" \
+                        "CPU bound medium usage CFS."
+    context_switch_line "./results/raw/cfs-cpu-heavy.dat" \
+                        "CPU bound heavy usage CFS."
+
+    context_switch_line "./results/raw/cfs-io-light.dat" \
+                        "IO bound light usage CFS."
+    context_switch_line "./results/raw/cfs-io-medium.dat" \
+                        "IO bound medium usage CFS."
+    context_switch_line "./results/raw/cfs-io-heavy.dat" \
+                        "IO bound heavy usage CFS."
+
+    context_switch_line "./results/raw/cfs-mixed-light.dat" \
+                        "Mixed light usage CFS."
+    context_switch_line "./results/raw/cfs-mixed-medium.dat" \
+                        "Mixed medium usage CFS."
+    context_switch_line "./results/raw/cfs-mixed-heavy.dat" \
+                        "Mixed heavy usage CFS."
+}
+
+
+
+
+fcfs_context_switch_results()
+{
+    context_switch_line "./results/raw/fcfs-cpu-light.dat" \
+                        "CPU bound light usage FCFS."
+    context_switch_line "./results/raw/fcfs-cpu-medium.dat" \
+                        "CPU bound medium usage FCFS."
+    context_switch_line "./results/raw/fcfs-cpu-heavy.dat" \
+                        "CPU bound heavy usage FCFS."
+
+    context_switch_line "./results/raw/fcfs-io-light.dat" \
+                        "IO bound light usage FCFS."
+    context_switch_line "./results/raw/fcfs-io-medium.dat" \
+                        "IO bound medium usage FCFS."
+    context_switch_line "./results/raw/fcfs-io-heavy.dat" \
+                        "IO bound heavy usage FCFS."
+
+    context_switch_line "./results/raw/fcfs-mixed-light.dat" \
+                        "Mixed light usage FCFS."
+    context_switch_line "./results/raw/fcfs-mixed-medium.dat" \
+                        "Mixed medium usage FCFS."
+    context_switch_line "./results/raw/fcfs-mixed-heavy.dat" \
+                        "Mixed heavy usage FCFS."
+}
+
+
+
+
+rr_context_switch_results()
+{
+    context_switch_line "./results/raw/rr-cpu-light.dat" \
+                        "CPU bound light usage RR."
+    context_switch_line "./results/raw/rr-cpu-medium.dat" \
+                        "CPU bound medium usage RR."
+    context_switch_line "./results/raw/rr-cpu-heavy.dat" \
+                        "CPU bound heavy usage RR."
+
+    context_switch_line "./results/raw/rr-io-light.dat" \
+                        "IO bound light usage RR."
+    context_switch_line "./results/raw/rr-io-medium.dat" \
+                        "IO bound medium usage RR."
+    context_switch_line "./results/raw/rr-io-heavy.dat" \
+                        "IO bound heavy usage RR."
+
+    context_switch_line "./results/raw/rr-mixed-light.dat" \
+                        "Mixed light usage RR."
+    context_switch_line "./results/raw/rr-mixed-medium.dat" \
+                        "Mixed medium usage RR."
+    context_switch_line "./results/raw/rr-mixed-heavy.dat" \
+                        "Mixed heavy usage RR."
+}
+
+
+
+
+context_switch_line()
+{
+    awk 'BEGIN {OFS="\t"}
+    {
+        involuntary+=$5;
+        voluntary+=$6;
+        count+=1;
+    }
+    END {
+        comment="# '"$2"'";
+        printf("%12.0f %12.0f     %s\n",
+               involuntary/count,
+               voluntary/count,
+               comment);
+    }' $1
+}
+
+
+
+
+cfs_percent_results()
+{
+    percent_line "./results/raw/cfs-cpu-light.dat" \
+                 "CPU bound light usage CFS."
+    percent_line "./results/raw/cfs-cpu-medium.dat" \
+                 "CPU bound medium usage CFS."
+    percent_line "./results/raw/cfs-cpu-heavy.dat" \
+                 "CPU bound heavy usage CFS."
+
+    percent_line "./results/raw/cfs-io-light.dat" \
+                 "IO bound light usage CFS."
+    percent_line "./results/raw/cfs-io-medium.dat" \
+                 "IO bound medium usage CFS."
+    percent_line "./results/raw/cfs-io-heavy.dat" \
+                 "IO bound heavy usage CFS."
+
+    percent_line "./results/raw/cfs-mixed-light.dat" \
+                 "Mixed light usage CFS."
+    percent_line "./results/raw/cfs-mixed-medium.dat" \
+                 "Mixed medium usage CFS."
+    percent_line "./results/raw/cfs-mixed-heavy.dat" \
+                 "Mixed heavy usage CFS."
+}
+
+
+
+
+fcfs_percent_results()
+{
+    percent_line "./results/raw/fcfs-cpu-light.dat" \
+                 "CPU bound light usage FCFS."
+    percent_line "./results/raw/fcfs-cpu-medium.dat" \
+                 "CPU bound medium usage FCFS."
+    percent_line "./results/raw/fcfs-cpu-heavy.dat" \
+                 "CPU bound heavy usage FCFS."
+
+    percent_line "./results/raw/fcfs-io-light.dat" \
+                 "IO bound light usage FCFS."
+    percent_line "./results/raw/fcfs-io-medium.dat" \
+                 "IO bound medium usage FCFS."
+    percent_line "./results/raw/fcfs-io-heavy.dat" \
+                 "IO bound heavy usage FCFS."
+
+    percent_line "./results/raw/fcfs-mixed-light.dat" \
+                 "Mixed light usage FCFS."
+    percent_line "./results/raw/fcfs-mixed-medium.dat" \
+                 "Mixed medium usage FCFS."
+    percent_line "./results/raw/fcfs-mixed-heavy.dat" \
+                 "Mixed heavy usage FCFS."
+}
+
+
+
+
+rr_percent_results()
+{
+    percent_line "./results/raw/rr-cpu-light.dat" \
+                 "CPU bound light usage RR."
+    percent_line "./results/raw/rr-cpu-medium.dat" \
+                 "CPU bound medium usage RR."
+    percent_line "./results/raw/rr-cpu-heavy.dat" \
+                 "CPU bound heavy usage RR."
+
+    percent_line "./results/raw/rr-io-light.dat" \
+                 "IO bound light usage RR."
+    percent_line "./results/raw/rr-io-medium.dat" \
+                 "IO bound medium usage RR."
+    percent_line "./results/raw/rr-io-heavy.dat" \
+                 "IO bound heavy usage RR."
+
+    percent_line "./results/raw/rr-mixed-light.dat" \
+                 "Mixed light usage RR."
+    percent_line "./results/raw/rr-mixed-medium.dat" \
+                 "Mixed medium usage RR."
+    percent_line "./results/raw/rr-mixed-heavy.dat" \
+                 "Mixed heavy usage RR."
+}
+
+
+
+
+percent_line()
+{
+    NPROC=$(nproc)
+
+    awk 'BEGIN {OFS="\t"}
+    {
+        percent+=$4/'$NPROC';
+        count+=1;
+    }
+    END {
+        comment="# '"$2"'";
+        printf("%6.0f     %s\n", percent/count, comment);
+    }' $1
+}
+
+
+
+
+cfs_time_results()
+{
+    time_line "./results/raw/cfs-cpu-light.dat" \
+              "CPU bound light usage CFS."
+    time_line "./results/raw/cfs-cpu-medium.dat" \
+              "CPU bound medium usage CFS."
+    time_line "./results/raw/cfs-cpu-heavy.dat" \
+              "CPU bound heavy usage CFS."
+
+    time_line "./results/raw/cfs-io-light.dat" \
+              "IO bound light usage CFS."
+    time_line "./results/raw/cfs-io-medium.dat" \
+              "IO bound medium usage CFS."
+    time_line "./results/raw/cfs-io-heavy.dat" \
+              "IO bound heavy usage CFS."
+
+    time_line "./results/raw/cfs-mixed-light.dat" \
+              "Mixed light usage CFS."
+    time_line "./results/raw/cfs-mixed-medium.dat" \
+              "Mixed medium usage CFS."
+    time_line "./results/raw/cfs-mixed-heavy.dat" \
+              "Mixed heavy usage CFS."
+}
+
+
+
+
+fcfs_time_results()
+{
+    time_line "./results/raw/fcfs-cpu-light.dat" \
+              "CPU bound light usage FCFS."
+    time_line "./results/raw/fcfs-cpu-medium.dat" \
+              "CPU bound medium usage FCFS."
+    time_line "./results/raw/fcfs-cpu-heavy.dat" \
+              "CPU bound heavy usage FCFS."
+
+    time_line "./results/raw/fcfs-io-light.dat" \
+              "IO bound light usage FCFS."
+    time_line "./results/raw/fcfs-io-medium.dat" \
+              "IO bound medium usage FCFS."
+    time_line "./results/raw/fcfs-io-heavy.dat" \
+              "IO bound heavy usage FCFS."
+
+    time_line "./results/raw/fcfs-mixed-light.dat" \
+              "Mixed light usage FCFS."
+    time_line "./results/raw/fcfs-mixed-medium.dat" \
+              "Mixed medium usage FCFS."
+    time_line "./results/raw/fcfs-mixed-heavy.dat" \
+              "Mixed heavy usage FCFS."
+}
+
+
+
+
+rr_time_results()
+{
+    time_line "./results/raw/rr-cpu-light.dat" \
+              "CPU bound light usage RR."
+    time_line "./results/raw/rr-cpu-medium.dat" \
+              "CPU bound medium usage RR."
+    time_line "./results/raw/rr-cpu-heavy.dat" \
+              "CPU bound heavy usage RR."
+
+    time_line "./results/raw/rr-io-light.dat" \
+              "IO bound light usage RR."
+    time_line "./results/raw/rr-io-medium.dat" \
+              "IO bound medium usage RR."
+    time_line "./results/raw/rr-io-heavy.dat" \
+              "IO bound heavy usage RR."
+
+    time_line "./results/raw/rr-mixed-light.dat" \
+              "Mixed light usage RR."
+    time_line "./results/raw/rr-mixed-medium.dat" \
+              "Mixed medium usage RR."
+    time_line "./results/raw/rr-mixed-heavy.dat" \
+              "Mixed heavy usage RR."
+}
+
+
+
+
+time_line()
+{
+    NPROC=$(nproc)
+
+    awk 'BEGIN {OFS="\t"}
+    {
+        wall+=$1;
+        user+=$2;
+        sys+=$3;
+        wait+=($1 * '$NPROC') - $2 - $3;
+        count+=1;
+    }
+    END {
+        comment="# '"$2"'";
+        printf("%12.6f %12.6f %12.6f %12.6f     %s\n",
+               wall/count, user/count, sys/count, wait/count, comment)
+    }' $1
+}
+
+
+
+
+analyze $@
