@@ -1,5 +1,5 @@
 % An Analysis of Linux Schedulers
-% Michael R. Shannon
+% Michael R. Shannon, Michael N. Eller
 % Saturday, April 04, 2015
 
 
