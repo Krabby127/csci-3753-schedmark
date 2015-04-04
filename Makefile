@@ -43,3 +43,4 @@ clean:
 	-rm *.o *.out*
 	-rm $(BINS)
 	-rm -R tmp
+	-rm report.pdf
