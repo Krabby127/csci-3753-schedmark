@@ -39,7 +39,7 @@ int main(int argc, char* argv[])
 "       generated will be written as 4 byte unsigned integers to the\n"
 "       specified file.\n"
 "\n"
-"updated: Thursday, April 02, 2015\n",
+"updated: Friday, April 03, 2015\n",
                         argv[0]);
                 return EXIT_SUCCESS;
                 break;
@@ -72,17 +72,18 @@ int main(int argc, char* argv[])
         }
     }
 
-    // print results to screen
+    // compute primes
     unsigned int *prime_nums = malloc(num_primes*sizeof(unsigned int));
     if (prime_nums == NULL){
         fprintf(stderr, "ERROR: Failed to allocate memory.\n");
         return EXIT_FAILURE;
     }
+
+    // print results to screen if verbose
     if (verbose){
         primes_verbose(num_primes, prime_nums);
     } else {
         primes(num_primes, prime_nums);
-        printf("%d\n", prime_nums[num_primes - 1]);
     }
     free(prime_nums);
 
