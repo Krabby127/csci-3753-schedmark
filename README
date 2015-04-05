@@ -19,6 +19,10 @@ For more information on each executable use the -h flag as most support it.
 
 Run benchmarks:
 
-    make clean; make clean-results; make; make benchmark; make
+    make clean; make clean-results; make; make benchmark; make plot
 
+Make report:
 
+    make report
+
+NOTE: Before the report is made the benchmarks must be run.
