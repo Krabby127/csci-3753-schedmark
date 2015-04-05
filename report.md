@@ -133,18 +133,38 @@ Table: Testing computer setup.
 | Filesystem  | BTRFS                      |
 
 
-The reasoning behind using this old machine was that bare metal could be used
-without worrying about a mistake in the code that could destroy data or the OS
-itself due to running as root, as this machines installation and data were
-disposable.
-
-In addition, to isolate the testing from outside interference no GUI was used.
-
 
 
 
 Results and Analysis
 ====================
+
+![Wall, user, system, and wait times of the completly fair
+sceduler.](plots/cfs-time.pdf)
+
+![Wall, user, system, and wait times of the first come first serve
+scheduler.](plots/fcfs-time.pdf)
+
+![Wall, user, system, and wait times of the round robin
+scheduler.](plots/rr-time.pdf)
+
+
+![CPU usage for the completly fair scheduler.](plots/cfs-percent.pdf)
+
+![CPU usage for the first come first serve scheduler.](plots/fcfs-percent.pdf)
+
+![CPU usage for the round robin scheduler.](plots/rr-percent.pdf)
+
+
+![Context switch count for the completly fair
+scheduler.](plots/cfs-context_switch.pdf)
+
+![Context switch count for the first come first serve
+scheduler.](plots/fcfs-context_switch.pdf)
+
+![Context switch count for the round robin
+scheduler.](plots/rr-context_switch.pdf)
+
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut vel accumsan ipsum,
 id facilisis dolor. Vivamus a sagittis diam. Nam congue lectus vel lorem tempor
