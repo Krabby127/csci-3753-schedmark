@@ -106,7 +106,8 @@ $$\text{wall time} = \frac{\text{user time} + \text{system time}
 which when solved for _wait time_ gives:
 $$\text{wait time} = \text{wall time} \cdot \text{processor cores} 
                    - \text{user time} + \text{system time}$$
-This script gives the files located in the "Graph Data" section of Appendix A.
+where _processor cores_ are the number of logical cores. This script gives the
+files located in the "Graph Data" section of Appendix A.
 
 The final part of the analysis is generating the plots shown in the next
 section.  This is done with the `plot` shell script which makes heavy use of
