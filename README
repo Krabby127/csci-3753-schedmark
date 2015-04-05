@@ -1,0 +1,24 @@
+This is a benchmarking program designed to evaluate 3 Linux schedulers.
+
+
+Prerequisites:
+
+    gnuplot - plotting
+    pandoc - only for report
+    runhaskell - only for report
+    pandoc-citeproc - only for report
+
+
+Building and Running:
+
+Build all executables:
+
+    make
+
+For more information on each executable use the -h flag as most support it.
+
+Run benchmarks:
+
+    make clean; make clean-results; make; make benchmark; make
+
+
