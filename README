@@ -1,4 +1,7 @@
-This is a benchmarking program designed to evaluate 3 Linux schedulers.
+This is a benchmarking program designed to evaluate 3 Linux schedulers:
+    1. SCHED_OTHER
+    2. SCHED_FIFO
+    3. SCHED_RR
 
 
 Prerequisites:
