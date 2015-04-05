@@ -6,7 +6,11 @@
 
 
 
-_Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut vel accumsan ipsum, id facilisis dolor. Vivamus a sagittis diam. Nam congue lectus vel lorem tempor egestas. Aliquam consectetur aliquet felis, et lobortis magna malesuada vitae. Donec vitae nibh enim. Pellentesque finibus ex elit, non facilisis sapien ornare id. Phasellus lacus ante, fringilla mollis arcu a, mattis iaculis magna._
+_Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut vel accumsan ipsum,
+id facilisis dolor. Vivamus a sagittis diam. Nam congue lectus vel lorem tempor
+egestas. Aliquam consectetur aliquet felis, et lobortis magna malesuada vitae.
+Donec vitae nibh enim. Pellentesque finibus ex elit, non facilisis sapien ornare
+id. Phasellus lacus ante, fringilla mollis arcu a, mattis iaculis magna._
 
 
 
@@ -23,7 +27,7 @@ This benchmarking will be done by examining CPU bound, IO bound, and mixed (CPU
 and IO) processes with the system under load.  Times, percentages, and context
 switches will be plotted and the results explained.  This was made possible by
 specially written prime solving code (written by the author of this report) and
-IO bound code from the lab handout (INSERT REFERENCE).
+IO bound code from the lab handout [@handout].
 
 
 
@@ -42,7 +46,7 @@ essentially a search through every integer after 2 checking to see if it is
 divisible by the previous primes.
 
 To test the schedulers behavior with a heavy load of IO the `rw` program (which
-came with the assignment handout (INSERT REFERENCE)) was used.  This program
+came with the assignment handout [@handout]) was used.  This program
 copies blocks from one file to make a new file.  In particular, it does this
 synchronously, avoiding system buffers that may interfere with the results of
 the testing.  It is also capable of generating a unique filename based on its
@@ -142,15 +146,46 @@ In addition, to isolate the testing from outside interference no GUI was used.
 Results and Analysis
 ====================
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut vel accumsan ipsum, id facilisis dolor. Vivamus a sagittis diam. Nam congue lectus vel lorem tempor egestas. Aliquam consectetur aliquet felis, et lobortis magna malesuada vitae. Donec vitae nibh enim. Pellentesque finibus ex elit, non facilisis sapien ornare id. Phasellus lacus ante, fringilla mollis arcu a, mattis iaculis magna.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut vel accumsan ipsum,
+id facilisis dolor. Vivamus a sagittis diam. Nam congue lectus vel lorem tempor
+egestas. Aliquam consectetur aliquet felis, et lobortis magna malesuada vitae.
+Donec vitae nibh enim. Pellentesque finibus ex elit, non facilisis sapien ornare
+id. Phasellus lacus ante, fringilla mollis arcu a, mattis iaculis magna.
 
-Nunc volutpat mollis quam, a eleifend eros. Maecenas non nulla lectus. Quisque dapibus metus est, et faucibus enim semper vitae. Nunc lacus ipsum, imperdiet et mattis ac, sodales sed massa. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut sed malesuada tellus. Aliquam sem mauris, euismod id auctor in, sollicitudin in ipsum. Vivamus odio nibh, pulvinar a nunc a, accumsan mattis sapien. Vestibulum pellentesque nulla sit amet eros condimentum molestie. Donec vitae felis eros.
+Nunc volutpat mollis quam, a eleifend eros. Maecenas non nulla lectus. Quisque
+dapibus metus est, et faucibus enim semper vitae. Nunc lacus ipsum, imperdiet et
+mattis ac, sodales sed massa. Lorem ipsum dolor sit amet, consectetur adipiscing
+elit. Ut sed malesuada tellus. Aliquam sem mauris, euismod id auctor in,
+sollicitudin in ipsum. Vivamus odio nibh, pulvinar a nunc a, accumsan mattis
+sapien. Vestibulum pellentesque nulla sit amet eros condimentum molestie. Donec
+vitae felis eros.
 
-Fusce id urna vitae purus porttitor euismod. Donec elementum lacinia eros quis imperdiet. Mauris non aliquam ligula, congue venenatis nulla. Nulla orci ex, sodales non magna a, tristique sollicitudin tellus. Ut orci arcu, viverra vitae lorem ac, mattis fermentum dui. Nullam risus nisl, aliquam et lectus sit amet, pretium fermentum justo. Aenean elementum, enim non sollicitudin tincidunt, justo lacus volutpat diam, nec fermentum urna nibh vulputate ipsum. Cras in metus rhoncus, tempus velit sed, ultricies massa. Aenean vel diam vel odio blandit egestas eget eget ex. Duis iaculis sapien ac sem auctor volutpat. Donec eu viverra neque.
+Fusce id urna vitae purus porttitor euismod. Donec elementum lacinia eros quis
+imperdiet. Mauris non aliquam ligula, congue venenatis nulla. Nulla orci ex,
+sodales non magna a, tristique sollicitudin tellus. Ut orci arcu, viverra vitae
+lorem ac, mattis fermentum dui. Nullam risus nisl, aliquam et lectus sit amet,
+pretium fermentum justo. Aenean elementum, enim non sollicitudin tincidunt,
+justo lacus volutpat diam, nec fermentum urna nibh vulputate ipsum. Cras in
+metus rhoncus, tempus velit sed, ultricies massa. Aenean vel diam vel odio
+blandit egestas eget eget ex. Duis iaculis sapien ac sem auctor volutpat. Donec
+eu viverra neque.
 
-Vestibulum ut justo non sapien volutpat ullamcorper. Nulla facilisi. Cras ut eros massa. Donec in fringilla metus. Morbi ultrices, quam vitae sollicitudin fermentum, risus enim auctor purus, eu finibus dui felis id ligula. Phasellus blandit ipsum porttitor ex viverra, in fermentum leo ultrices. Nulla facilisi. Nam pharetra dolor eros, sit amet pretium diam sodales venenatis. Maecenas vel viverra urna, eu volutpat turpis. Donec a ligula pulvinar, vulputate nibh vel, semper dolor. Fusce vehicula interdum placerat. Nam lectus libero, lacinia nec magna a, porttitor accumsan est.
+Vestibulum ut justo non sapien volutpat ullamcorper. Nulla facilisi. Cras ut
+eros massa. Donec in fringilla metus. Morbi ultrices, quam vitae sollicitudin
+fermentum, risus enim auctor purus, eu finibus dui felis id ligula. Phasellus
+blandit ipsum porttitor ex viverra, in fermentum leo ultrices. Nulla facilisi.
+Nam pharetra dolor eros, sit amet pretium diam sodales venenatis. Maecenas vel
+viverra urna, eu volutpat turpis. Donec a ligula pulvinar, vulputate nibh vel,
+semper dolor. Fusce vehicula interdum placerat. Nam lectus libero, lacinia nec
+magna a, porttitor accumsan est.
 
-Morbi varius purus vel augue hendrerit efficitur. Sed finibus, risus id varius fermentum, diam felis faucibus nisi, vehicula pellentesque ligula enim et mi. Suspendisse tristique et diam sed ornare. Aliquam lectus risus, consectetur sit amet maximus et, malesuada at eros. Fusce fringilla auctor fringilla. Integer diam tellus, fringilla laoreet mi a, pretium cursus ante. Proin eleifend elit a felis feugiat suscipit. Phasellus a dolor sed massa gravida efficitur at in nisi. Aliquam erat volutpat.
+Morbi varius purus vel augue hendrerit efficitur. Sed finibus, risus id varius
+fermentum, diam felis faucibus nisi, vehicula pellentesque ligula enim et mi.
+Suspendisse tristique et diam sed ornare. Aliquam lectus risus, consectetur sit
+amet maximus et, malesuada at eros. Fusce fringilla auctor fringilla. Integer
+diam tellus, fringilla laoreet mi a, pretium cursus ante. Proin eleifend elit a
+felis feugiat suscipit. Phasellus a dolor sed massa gravida efficitur at in
+nisi. Aliquam erat volutpat.
 
 
 
@@ -158,9 +193,24 @@ Morbi varius purus vel augue hendrerit efficitur. Sed finibus, risus id varius f
 Conclusion
 ==========
 
-Fusce id urna vitae purus porttitor euismod. Donec elementum lacinia eros quis imperdiet. Mauris non aliquam ligula, congue venenatis nulla. Nulla orci ex, sodales non magna a, tristique sollicitudin tellus. Ut orci arcu, viverra vitae lorem ac, mattis fermentum dui. Nullam risus nisl, aliquam et lectus sit amet, pretium fermentum justo. Aenean elementum, enim non sollicitudin tincidunt, justo lacus volutpat diam, nec fermentum urna nibh vulputate ipsum. Cras in metus rhoncus, tempus velit sed, ultricies massa. Aenean vel diam vel odio blandit egestas eget eget ex. Duis iaculis sapien ac sem auctor volutpat. Donec eu viverra neque.
+Fusce id urna vitae purus porttitor euismod. Donec elementum lacinia eros quis
+imperdiet. Mauris non aliquam ligula, congue venenatis nulla. Nulla orci ex,
+sodales non magna a, tristique sollicitudin tellus. Ut orci arcu, viverra vitae
+lorem ac, mattis fermentum dui. Nullam risus nisl, aliquam et lectus sit amet,
+pretium fermentum justo. Aenean elementum, enim non sollicitudin tincidunt,
+justo lacus volutpat diam, nec fermentum urna nibh vulputate ipsum. Cras in
+metus rhoncus, tempus velit sed, ultricies massa. Aenean vel diam vel odio
+blandit egestas eget eget ex. Duis iaculis sapien ac sem auctor volutpat. Donec
+eu viverra neque.
 
-Vestibulum ut justo non sapien volutpat ullamcorper. Nulla facilisi. Cras ut eros massa. Donec in fringilla metus. Morbi ultrices, quam vitae sollicitudin fermentum, risus enim auctor purus, eu finibus dui felis id ligula. Phasellus blandit ipsum porttitor ex viverra, in fermentum leo ultrices. Nulla facilisi. Nam pharetra dolor eros, sit amet pretium diam sodales venenatis. Maecenas vel viverra urna, eu volutpat turpis. Donec a ligula pulvinar, vulputate nibh vel, semper dolor. Fusce vehicula interdum placerat. Nam lectus libero, lacinia nec magna a, porttitor accumsan est.
+Vestibulum ut justo non sapien volutpat ullamcorper. Nulla facilisi. Cras ut
+eros massa. Donec in fringilla metus. Morbi ultrices, quam vitae sollicitudin
+fermentum, risus enim auctor purus, eu finibus dui felis id ligula. Phasellus
+blandit ipsum porttitor ex viverra, in fermentum leo ultrices. Nulla facilisi.
+Nam pharetra dolor eros, sit amet pretium diam sodales venenatis. Maecenas vel
+viverra urna, eu volutpat turpis. Donec a ligula pulvinar, vulputate nibh vel,
+semper dolor. Fusce vehicula interdum placerat. Nam lectus libero, lacinia nec
+magna a, porttitor accumsan est.
 
 
 
@@ -168,8 +218,17 @@ Vestibulum ut justo non sapien volutpat ullamcorper. Nulla facilisi. Cras ut ero
 References
 ==========
 
-* Reference A
-* Reference B
+
+McCormick, Anthony. 2014. “Pandoc Include Files Filter in Haskell.” _Stack Over-
+flow_.
+[http://stackoverflow.com/questions/21584396/pandoc-include-files-filter-in-haskell](http://stackoverflow.com/questions/21584396/pandoc-include-files-filter-in-haskell).
+
+
+Richard Han, Rahat Rafiq, Mohammad Hashemi. 2015. "Programing Assign- ment 3:
+Investigating the Linux Scheduler." _CSCI 3753 - Operating Systems._ University
+of Colorado at Boulder.
+
+
 
 
 
@@ -433,9 +492,8 @@ This script runs the benchmarks that generate the raw data in Appendix A.
 
 ### Pandoc include filter (`pandoc-include`)
 
-This is a pandoc filter found at [StackOverflow: pandoc include files filter in
-haskell](http://stackoverflow.com/questions/21584396/pandoc-include-files-filter-in-haskell)
-This script runs the benchmarks that generate the raw data in Appendix A.
+This is a pandoc filter found at Stack Overflow [@pandoc-include]. This script
+runs the benchmarks that generate the raw data in Appendix A.
 
 ``` {.haskell include="./pandoc-include"}
 ```
@@ -470,7 +528,7 @@ This library generates primes.
 
 ### IO bound file copy program (`rw.c`)
 
-This is the `rw` program that came with the assignment handout (INSERT REFERENCE).
+This is the `rw` program that came with the assignment handout [@handout].
 
 ``` {.c include="./rw.c"}
 ```

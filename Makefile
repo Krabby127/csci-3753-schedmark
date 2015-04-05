@@ -30,8 +30,9 @@ plot:
 .PHONY: report
 report: report.pdf
 
-report.pdf: report.md
-	pandoc --filter ./pandoc-include report.md -o report.pdf
+report.pdf: report.md references.bib
+	pandoc --filter ./pandoc-include --filter pandoc-citeproc \
+	--bibliography=references.bib report.md -o report.pdf
 
 .PHONY: clean-results
 clean-results:
