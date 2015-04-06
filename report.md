@@ -6,15 +6,6 @@
 
 
 
-_Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut vel accumsan ipsum,
-id facilisis dolor. Vivamus a sagittis diam. Nam congue lectus vel lorem tempor
-egestas. Aliquam consectetur aliquet felis, et lobortis magna malesuada vitae.
-Donec vitae nibh enim. Pellentesque finibus ex elit, non facilisis sapien ornare
-id. Phasellus lacus ante, fringilla mollis arcu a, mattis iaculis magna._
-
-
-
-
 Introduction
 ============
 
@@ -52,7 +43,7 @@ synchronously, avoiding system buffers that may interfere with the results of
 the testing.  It is also capable of generating a unique filename based on its
 PID (process id) which became useful in the benchmarking process.  It is
 important to note that the default blocksize is 1024 bytes and the total amount
-of data transfered is 100 blocks by default.
+of data transferred is 100 blocks by default.
 
 The final mode of usage tested was a mix between IO and CPU heavy processes.  To
 accomplish this the `primes` library and `prime` program were modified to allow
@@ -68,7 +59,7 @@ The above processes covered the three types of processes that needed to be
 analyzed, however, these needed to be run under different schedulers and system
 loads.  To accomplish this the `schedule.c` program was written.  This program
 does two things.  It first sets the scheduler to either the CFS scheduler, the
-soft realtime RR scheduler, or the soft realtime FCFS scheduler (known internaly
+soft realtime RR scheduler, or the soft realtime FCFS scheduler (known internally
 to Linux as FIFO).  The second role it performs is to fork off a given number of
 processes (which inherit the selected scheduler) and runs the program given to
 `schedule` in each process.  This is done through `fork`, `exec`, and `wait`.
@@ -123,18 +114,15 @@ Table: Testing computer setup.
 
 | Varaible    | Value                      |
 | ----------- | -------------------------- |
-| OS          | Arch Linux                 |
-| Kernel      | 3.19.2                     |
-| Archtecture | i686                       |
-| CPU         | Intel Core 2 T7400         |
-| CPU Clock   | 2.16 GHz                   |
-| CPU Cores   | 2 (no Hyper-Threading)     |
-| Memory      | 2 GB                       |
-| HDD         | Seagate Barracuda 7200 RPM |
+| OS          | Xubuntu                    |
+| Kernel      | 3.13.0                     |
+| Architecture| x86/_64                    |
+| CPU         | Intel Core i7-3820         |
+| CPU Clock   | 4.00 GHz                   |
+| CPU Cores   | 4 (8 Hyper-Threaded)       |
+| Memory      | 16 GB                      |
+| HDD         | Intel 530 Series SSD       |
 | Filesystem  | BTRFS                      |
-
-
-
 
 
 Results and Analysis
@@ -166,72 +154,110 @@ scheduler.](plots/fcfs-context_switch.pdf)
 ![Context switch count for the round robin
 scheduler.](plots/rr-context_switch.pdf)
 
+#### Mixed ####
+At first glance, all three scheduling policies seemed to behave relatively
+ the same. However, the Completely Fair Scheduler (CFS) seemed to be the
+fastest. This is not surprising, as most modern Linux 
+schedulers use CFS because it works very well. 
+What should be of note though are the instances where this is not the case.
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut vel accumsan ipsum,
-id facilisis dolor. Vivamus a sagittis diam. Nam congue lectus vel lorem tempor
-egestas. Aliquam consectetur aliquet felis, et lobortis magna malesuada vitae.
-Donec vitae nibh enim. Pellentesque finibus ex elit, non facilisis sapien ornare
-id. Phasellus lacus ante, fringilla mollis arcu a, mattis iaculis magna.
+In the following cases, overall (wall) CFS times were outperformed:
 
-Nunc volutpat mollis quam, a eleifend eros. Maecenas non nulla lectus. Quisque
-dapibus metus est, et faucibus enim semper vitae. Nunc lacus ipsum, imperdiet et
-mattis ac, sodales sed massa. Lorem ipsum dolor sit amet, consectetur adipiscing
-elit. Ut sed malesuada tellus. Aliquam sem mauris, euismod id auctor in,
-sollicitudin in ipsum. Vivamus odio nibh, pulvinar a nunc a, accumsan mattis
-sapien. Vestibulum pellentesque nulla sit amet eros condimentum molestie. Donec
-vitae felis eros.
+- RR: CPU bound light-usage
+- RR: CPU bound heavy-usage
+- RR: IO bound medium-usage
+- RR: Mixed light-usage
+- FCFS: IO bound light-usage
+- FCFS: IO bound medium-usage
+- FCFS: Mixed light-usage
 
-Fusce id urna vitae purus porttitor euismod. Donec elementum lacinia eros quis
-imperdiet. Mauris non aliquam ligula, congue venenatis nulla. Nulla orci ex,
-sodales non magna a, tristique sollicitudin tellus. Ut orci arcu, viverra vitae
-lorem ac, mattis fermentum dui. Nullam risus nisl, aliquam et lectus sit amet,
-pretium fermentum justo. Aenean elementum, enim non sollicitudin tincidunt,
-justo lacus volutpat diam, nec fermentum urna nibh vulputate ipsum. Cras in
-metus rhoncus, tempus velit sed, ultricies massa. Aenean vel diam vel odio
-blandit egestas eget eget ex. Duis iaculis sapien ac sem auctor volutpat. Donec
-eu viverra neque.
+These specific cases in which CFS was outperformed should not seem 
+unexpected. These instances also seem to stand out as they do not
+appear to be very common usage cases. 
 
-Vestibulum ut justo non sapien volutpat ullamcorper. Nulla facilisi. Cras ut
-eros massa. Donec in fringilla metus. Morbi ultrices, quam vitae sollicitudin
-fermentum, risus enim auctor purus, eu finibus dui felis id ligula. Phasellus
-blandit ipsum porttitor ex viverra, in fermentum leo ultrices. Nulla facilisi.
-Nam pharetra dolor eros, sit amet pretium diam sodales venenatis. Maecenas vel
-viverra urna, eu volutpat turpis. Donec a ligula pulvinar, vulputate nibh vel,
-semper dolor. Fusce vehicula interdum placerat. Nam lectus libero, lacinia nec
-magna a, porttitor accumsan est.
+Unix (along with most other
+OSes) is an interactive operating system. The average user does not
+need to know, nor do they likely care, if the system spends less time
+on a particular process compared to another scheduling method. The only
+tangible result they want is the time from execution to completion of
+a particular task. From a pure self-heuristic standpoint I would believe
+that most user tasks fall under the *Mixed* category and the scheduling
+policy would have been created with that in mind. It does leave questions
+remaining as to why CFS was the most inefficient in regards to
+mixed processes.
 
-Morbi varius purus vel augue hendrerit efficitur. Sed finibus, risus id varius
-fermentum, diam felis faucibus nisi, vehicula pellentesque ligula enim et mi.
-Suspendisse tristique et diam sed ornare. Aliquam lectus risus, consectetur sit
-amet maximus et, malesuada at eros. Fusce fringilla auctor fringilla. Integer
-diam tellus, fringilla laoreet mi a, pretium cursus ante. Proin eleifend elit a
-felis feugiat suscipit. Phasellus a dolor sed massa gravida efficitur at in
-nisi. Aliquam erat volutpat.
+The scheduling policy was most likely developed for the masses, or 
+the average user. The average user usually 
+performs some interactive task, begins execution, and waits for the results
+before performing some other interactive task. 
+A common example would be
+using a web browser. The user interactively enters the URL of a particular
+website they wish to visit and then tells the web browser to execute the 
+task of querying the server for whatever page they wish to see. From there,
+the web browser waits until its requested data is completely loaded. 
+The user then has the web browser perform some other quick task and
+once again waits on IO and the cycle repeats. 
+
+Aside from *Mixed light-usage*, the cases when CFS was outran do not 
+seem to be very common. It is still very surprising that CFS performed
+slower than both RR's and FCFS's cases for *Mixed light-usage*. I would
+have expected CFS to be the fastest in that case, as that is what 
+seems like would be the most common usage scenario: a user requesting a
+small task that may require a small amount of data to be queried from IO.
+In actuality, it may be that *Mixed medium-usage* is the most common. 
+The common user wants an OS to be snappy. When they click on a button,
+they want to see instant gratification of the button appearing pressed. 
+If this process does not happen simultaneously, it appears to the user
+that there is a problem occurring somewhere. 
+
+The discrepancy stems from CFS's much higher **System Time**. CFS, RR, and
+ FCFS have scheduling complexity of O(log n), O(1), and O(1), respectively. 
+With this in mind it makes sense that CFS is slow for small tasks when
+the scheduling rivals the time of the task itself. CFS scales
+nicely though, and its efficiency only increases as
+a larger load is applied. 
 
 
+#### I/O Bound ####
+In terms of overall time, First Come First Served is the fastest for
+IO bound processes. It isn't that much faster than RR scheduling though
+and its CPU efficiency is is approximately the same as RR. The
+similar efficiency makes sense, as neither policy have much scheduling to do
+aside from starting on the next task in the run queue. With a large number
+of similar processes, First Come First Served approximates a Round Robin
+policy. This explains why the differences between the two scheduling policies
+seem to diminish as more processes are added to the system. 
+
+In networking devices such as routers and switches it would make sense for 
+First Come First Served to be used. Most of the packets require very little
+computation compared to network latency and are therefore IO bound. 
+
+In CPU intensive applications, FCFS would not fair as well though. 
+Throughput can be low, since long processes can hold the CPU. For the 
+same reason, turnaround time, waiting time, and response time can also
+be high. Long processes can also cause starvation while using FCFS. 
+
+#### CPU Bound ####
+In terms of overall time, Round Robbin is the fastest for CPU bound
+applications. Its time is on par with CFS for light and medium-usage, but
+it outpaces CFS for heavy-usage. What is slightly surprising is that RR has
+a lower CPU utilization than CFS. Even more surprising is the fact that CPU
+utilization declines as the load is increased for RR CPU bound tasks. In 
+all other benchmarks, CPU utilization only increased as a larger load
+was applied. 
+
+It is not exactly clear where RR would best be utilized though. If CPU
+efficiency was not a concern RR would excel in heavy CPU intensive
+applications. In reality, this is usually not the case though.
+Round Robbin is however used frequently in "best-effort packet switching"
+and other statistical multiplexing. It can also be useful in critical
+embedded systems due to the fact that Round Robin is starvation free. 
 
 
 Conclusion
 ==========
 
-Fusce id urna vitae purus porttitor euismod. Donec elementum lacinia eros quis
-imperdiet. Mauris non aliquam ligula, congue venenatis nulla. Nulla orci ex,
-sodales non magna a, tristique sollicitudin tellus. Ut orci arcu, viverra vitae
-lorem ac, mattis fermentum dui. Nullam risus nisl, aliquam et lectus sit amet,
-pretium fermentum justo. Aenean elementum, enim non sollicitudin tincidunt,
-justo lacus volutpat diam, nec fermentum urna nibh vulputate ipsum. Cras in
-metus rhoncus, tempus velit sed, ultricies massa. Aenean vel diam vel odio
-blandit egestas eget eget ex. Duis iaculis sapien ac sem auctor volutpat. Donec
-eu viverra neque.
 
-Vestibulum ut justo non sapien volutpat ullamcorper. Nulla facilisi. Cras ut
-eros massa. Donec in fringilla metus. Morbi ultrices, quam vitae sollicitudin
-fermentum, risus enim auctor purus, eu finibus dui felis id ligula. Phasellus
-blandit ipsum porttitor ex viverra, in fermentum leo ultrices. Nulla facilisi.
-Nam pharetra dolor eros, sit amet pretium diam sodales venenatis. Maecenas vel
-viverra urna, eu volutpat turpis. Donec a ligula pulvinar, vulputate nibh vel,
-semper dolor. Fusce vehicula interdum placerat. Nam lectus libero, lacinia nec
-magna a, porttitor accumsan est.
 
 
 
